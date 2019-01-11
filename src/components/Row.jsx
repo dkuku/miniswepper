@@ -8,7 +8,7 @@ const Last = styled.div`clear: both;`
 const Row = (props) => {
   return (
     <div>
-    {props.row.map(field => <Field {...field} reveal={props.reveal}/>)}
+    {props.row.map((field, i) => <Field {...field} reveal={props.reveal} key={i}/>)}
     <Last/>
     </div>
   )

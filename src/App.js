@@ -15,19 +15,31 @@ class App extends Component {
     board: [[]],
     width: 10,
     height: 10,
-    emptyFields: 100
+    chance: 10,
+    emptyFields: 100,
+    gameState: "playing"
   }
 
   componentDidMount() {
     this.setState({
-      board: this.genBoard(this.state.width, this.state.height, 20)
+      board: this.genBoard(
+        this.state.width,
+        this.state.height,
+        this.state.chance
+      )
     })
   }
 
-  checkField = (position, board=this.state.board) => {
+  checkField = (position, board = this.state.board) => {
     const x = position[0]
     const y = position[1]
     this.setState(prevState => {
+      if (prevState.emptyFields == 1) {
+        return {
+          emptyFields: prevState.emptyFields - 1,
+          gameState: 'Won'
+        }
+      }
       return { emptyFields: prevState.emptyFields - 1 }
     })
     if (board[x][y].open) {
@@ -39,29 +51,31 @@ class App extends Component {
     return board
   }
 
-  revealField = (position, board=this.state.board) => {
+  revealField = (position, board = this.state.board) => {
     const x = position[0]
     const y = position[1]
 
     board = this.checkField(position, board)
-    if (board[x][y].bomb){
-      this.revealBoard()
+    if (board[x][y].bomb) {
+      this.revealBoard('lost')
     }
     if (board[x][y].open === "0") {
       this.openNeighbours(position, board)
     }
 
     this.setState(prevState => {
-      return { board, counter: prevState.counter+1 }
+      return { board, counter: prevState.counter + 1 }
     })
   }
 
-  revealBoard(){
+  revealBoard(gameState) {
     this.setState(prevState => {
-      return {board: prevState.board.map(row => row.map(field => {
-        field.open = this.countBombs(field.position, prevState.board)
-
-      }))}
+      return {
+        gameState,
+        board: prevState.board.map(row => row.map(field => {
+          field.open = this.countBombs(field.position, prevState.board)
+        }))
+      }
     })
   }
 
@@ -71,7 +85,7 @@ class App extends Component {
     for (let i = x - 1; i <= x + 1; i++) {
       for (let j = y - 1; j <= y + 1; j++) {
         if (0 <= i && i < this.state.width && 0 <= j && j < this.state.height) {
-          if ( !board[i][j].open) {
+          if (!board[i][j].open) {
             this.revealField([i, j], board)
           }
         }
@@ -123,10 +137,12 @@ class App extends Component {
   }
 
   render() {
-    const { board } = this.state
+    const { board, emptyFields, gameState } = this.state
+
     return (
       <Board>
-        <Title>To go: {this.state.emptyFields} fields</Title>
+        <Title>To go: {emptyFields} fields</Title>
+        {gameState === 'playing' ? <div/> : <h1>{gameState}</h1>}
         {board.map((row, i) =>
           <Row row={row} key={i} reveal={this.revealField}></Row>
         )}
