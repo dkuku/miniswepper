@@ -16,17 +16,23 @@ class App extends Component {
     width: 10,
     height: 10,
     chance: 10,
-    emptyFields: 100,
-    gameState: "playing"
   }
 
-  componentDidMount() {
-    this.setState({
-      board: this.genBoard(
-        this.state.width,
-        this.state.height,
-        this.state.chance
-      )
+  componentDidMount() { this.newGame() }
+  newGame = () => {
+    this.setState(prevState => {
+      return {
+        emptyFields: prevState.width * prevState.height
+      }
+    }, () => {
+      this.setState({
+        gameState: 'playing',
+        board: this.genBoard(
+          this.state.width,
+          this.state.height,
+          this.state.chance
+        )
+      })
     })
   }
 
@@ -142,7 +148,13 @@ class App extends Component {
     return (
       <Board>
         <Title>To go: {emptyFields} fields</Title>
-        {gameState === 'playing' ? <div/> : <h1>{gameState}</h1>}
+        {gameState === 'playing' ?
+          <div /> :
+          <div>
+            <h1>{gameState}</h1>
+            <button onClick={this.newGame}>new game</button>
+          </div>
+        }
         {board.map((row, i) =>
           <Row row={row} key={i} reveal={this.revealField}></Row>
         )}
