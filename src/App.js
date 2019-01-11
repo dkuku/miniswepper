@@ -15,7 +15,7 @@ class App extends Component {
     board: [[]],
     width: 10,
     height: 10,
-    chance: 10,
+    chance: 10
   }
 
   componentDidMount() { this.newGame() }
@@ -40,7 +40,7 @@ class App extends Component {
     const x = position[0]
     const y = position[1]
     this.setState(prevState => {
-      if (prevState.emptyFields == 1) {
+      if (prevState.emptyFields === 1) {
         return {
           emptyFields: prevState.emptyFields - 1,
           gameState: 'Won'
@@ -78,9 +78,9 @@ class App extends Component {
     this.setState(prevState => {
       return {
         gameState,
-        board: prevState.board.map(row => row.map(field => {
+        board: prevState.board.map(row => row.map(field => (
           field.open = this.countBombs(field.position, prevState.board)
-        }))
+        )))
       }
     })
   }
