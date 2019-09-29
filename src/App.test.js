@@ -9,6 +9,7 @@ describe('genField', () => {
   beforeEach(() => {
     wrapper = shallow(<App />)
   })
+
   it('generates an empty field', () => {
     expect(wrapper.instance().genField(0, 0, 0)).toEqual(
       {
@@ -34,6 +35,7 @@ describe('genBoard', () => {
   beforeEach(() => {
     wrapper = shallow(<App />)
   })
+
   it('generates a board', () => {
     expect(wrapper.instance().genBoard(1, 1, 0)).toEqual(
       [[{
@@ -45,9 +47,10 @@ describe('genBoard', () => {
   })
 
   it('generates a 10 x 10 board', () => {
-    const board = wrapper.instance().genBoard(10, 10, 0)
-    expect(board.length).toEqual(10)
-    expect(board[0].length).toEqual(10)
+    const size = 10
+    const board = wrapper.instance().genBoard(size, size, 0)
+    expect(board.length).toEqual(size)
+    expect(board[0].length).toEqual(size)
   })
 })
 

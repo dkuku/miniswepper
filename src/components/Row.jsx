@@ -18,4 +18,5 @@ Row.propTypes = {
   row: PropTypes.arrayOf(Object),
   reveal: PropTypes.func.isRequired
 }
+
 export default Row
